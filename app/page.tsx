@@ -6,11 +6,46 @@ import { WeatherData } from "@/types/weather";
 import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap"; 
 
+const weatherEffects = {
+  Clear: {
+    bg: "from-blue-400 to-yellow-200",
+    iconColor: "text-yellow-400",
+    label: "晴天"
+  },
+  Clouds: {
+    bg: "from-gray-400 to-blue-300",
+    iconColor: "text-gray-100",
+    label: "多雲"
+  },
+  Rain: {
+    bg: "from-slate-700 to-blue-900",
+    iconColor: "text-blue-300",
+    label: "雨天"
+  },
+  Snow: {
+    bg: "from-blue-100 to-slate-300",
+    iconColor: "text-white",
+    label: "下雪"
+  },
+  Thunderstorm: {
+    bg: "from-gray-900 to-purple-900",
+    iconColor: "text-yellow-500",
+    label: "雷雨"
+  },
+  Default: {
+    bg: "from-blue-500 to-blue-300",
+    iconColor: "text-white",
+    label: "未知"
+  }
+};
+
 export default function WeatherPage() {
   const [city, setCity] = useState(""); 
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const currentWeather = weather?.weather[0].main as keyof typeof weatherEffects;
+  const theme = weatherEffects[currentWeather] || weatherEffects.Default;
 
   // 2. 設定動畫用的 Ref
   const cardRef = useRef(null);
@@ -76,7 +111,7 @@ export default function WeatherPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-6 transition-all duration-500 bg-[linear-gradient(to_top_right,#003377_20%,black_80%)]">
+    <main className={`min-h-screen flex items-center justify-center p-6 transition-all duration-1000 bg-gradient-to-br ${theme.bg}`}>
       
       {/* 天氣卡片容器 */}
       <div ref={cardRef} className="weather-card w-full max-w-md bg-white/20 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/30 text-white">
